@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<title>ES SOM</title>
+<head>
+  <meta charset="utf-8" />
+  <html lang="en">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
+  <!--jQuery-->
+  <script src="js/jquery.js" type="text/javascript"></script>
+  <script src="js/main.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+  <!--Stylesheet-->
+  <link rel="stylesheet" href="inc/style.css" />
+  
+  <!--Custom JS-->
+  <script type="text/javascript" src="inc/initiators.js"></script>
+  
+  <!--Mapbox API-->
+  <meta name='viewport' content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link href="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.css" rel="stylesheet" />
+  
+  <!--Fonts-->
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700" rel="stylesheet" type="text/css"><!--Open Sans-->
+ 
+  
+  <!--CartoDB SidePanel-->
+  <link rel="stylesheet" href="css/light-theme.css">
+  <link rel="stylesheet" href="css/makeitresponsive.css">
+  <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+  
+
+  <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.uncompressed.js">
+  </script>
+  <script src="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.standalone.js"></script>
+  
+   <!-- Leaflet Plugins -->
+  <link rel="stylesheet" href="src/Control.MiniMap.css" />
+  <script src="src/Control.MiniMap.js" type="text/javascript"></script>
+   
+  
+  
+  <script>
+    $(function() {
+      $( "#dialog" ).dialog({
+	modal: true
+      });
+    });
+  </script>
+ 
+ 
+  <!--[if lte IE 8]>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' >
+  <![endif]-->
+
+  <!-- Leaflet Plugins 
+  <link rel="stylesheet" href="src/Control.MiniMap.css" />
+  <script src="src/Control.MiniMap.js" type="text/javascript"></script>-->
+  
+
+	<style>
+	body{
+		font: 62.5% "Trebuchet MS", sans-serif;
+	}
+	.demoHeaders {
+		margin-top: 1em;
+	}
+	#dialog-link {
+		padding: .4em 1em .4em 20px;
+		text-decoration: none;
+		position: relative;
+	}
+	#dialog-link span.ui-icon {
+		margin: 0 5px 0 0;
+		position: absolute;
+		left: .2em;
+		top: 50%;
+		margin-top: -8px;
+	}
+	#icons {
+		margin: 0;
+		padding: 0;
+	}
+	#icons li {
+		margin: 2px;
+		position: relative;
+		padding: 4px 0;
+		cursor: pointer;
+		float: left;
+		list-style: none;
+	}
+	#icons span.ui-icon {
+		float: left;
+		margin: 0 4px;
+	}
+	.fakewindowcontain .ui-widget-overlay {
+		position: absolute;
+	}
+	select 
+	{
+		width: 200px;
+	}
+	
+	#format
+	{
+		text-align: center;
+	}
+	</style>   
+  
+</head>
+
+<body>
+
+<!--
+  <div id="dialog" title="SOM">
+    <div class="note">
+    <p><h2>Self-Organizing Map (SOM)</h2></p>
+	Ecosystem Services</p>
+	<p></p>blah, blah, blah... ADD LISA SI MAP
+    </div>
+  </div><!--#dialog-->
+  
+    <div class="map" id="map">
+	</div>
+
+	
+	
+    <div class="sidepanel">
+	
+
+<!-- JQuery Tabs -->
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1"><b>FILTER</b></a></li>
+		<li><a href="#tabs-2"><b>RESULTS</b></a></li>	
+		<li><a href="#tabs-3">&#8593;</a></li>
+	</ul>
+	
+	<div id="tabs-1">
+	<fieldset>
+	<legend><h3>CONTROLS</h3></legend>
+	
+         &nbsp;&nbsp;<label for="value">Publication Year:</label>
+         <input type="text" id="value" style="border:0; color:#b9cd6d; font-weight:bold;">
+		</p>
+		<div id="slider-3"> &nbsp;&nbsp;</div>
+		<br><br>
+		<form name ="subscribe" id="subscribe_frm" action="#"> 
+		<b>&nbsp;&nbsp;Author Name</b> (Last, First Initial)<b>:</b> <input type="text" style="font-size:8pt;" value="Daily, G" id="ck_Author"><br>
+		<b>&nbsp;&nbsp;Sort By: </b> <input type="radio" name="sort" id="sort_Year">Publication Year <input type="radio" name="sort" id="sort_Author" checked>Last Name of First Author<p>
+		<input type="button" name="Submit" value="SHOW" onclick="processFormData();" >
+		</form>	
+    </fieldset>
+	</div>
+	
+	<div id="tabs-2">
+		<fieldset>
+		<legend><h3>OUTPUT TABLE OF SELECTED RECORDS</h3></legend>
+		<br>
+		<div id="Table"></div> 
+		</fieldset>
+	</div>
+
+	
+<div id="tabs-3">
+	<br>
+
+</div>		
+	
+<br>	
+</div>
+<br>
+	
+<script>
+
+$(window).load(function() {
+	$( "#accordion").accordion({heightStyle: 'panel'});
+	$( "#tabs" ).tabs();
+    $( "#check" ).button();
+    $( "#format" ).buttonset();
+	$( "#tooltip" ).tooltip();
+
+		$(function() {
+            $( "#slider-3" ).slider({
+               range:true,
+			   animate:true,
+			   step: 1,
+               min: 1990,
+               max: 2016,
+               values: [ 1997, 2003 ],
+               slide: function( event, ui ) {
+                  $( "#value" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+               },
+			   change: function(event, ui) { 
+			   
+			   var min = ui.values[ 0 ];
+			   var max = ui.values[ 1 ];	   
+			   BMU(min,max);
+			 
+			   } ,
+           });
+         $( "#value" ).val($( "#slider-3" ).slider( "values", 0 ) +
+            " - " + $( "#slider-3" ).slider( "values", 1 ) );
+         });	
+	
+	BMU(1997,2003);
+	
+});
+	
+	
+var ESRIImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, and UPR-EGP'});	
+	
+        var map = L.map('map', { 
+          zoomControl: true,
+          center: [0.001, 0.00225],
+          zoom: 19,
+		  minZoom: 16,
+		  maxZoom: 25
+        });
+		
+	
+	
+map.attributionControl.setPrefix('Map viewer by: <a href="mailto:gverutes@gmail.com" target="_top">Gregg Verutes</a>');
+	
+
+// add basemap and overlays
+var baseMaps = {
+	"imagery": ESRIImagery,
+};
+
+
+var imageUrl = 'img/WebMapOverlay.png',
+    imageBounds = [[0, 0], [0.00221, 0.00255]];
+
+var Matthew = L.imageOverlay(imageUrl, imageBounds, {
+    opacity: 0.65
+	
+  });
+
+
+
+// add all SOM BMUs
+var layerUrl = 'https://stanford.cartodb.com/u/gverutes/api/v2/viz/c21deb6e-27a1-11e7-b77b-0ee66e2c9693/viz.json';	
+		
+		
+		
+var overlayMaps = {"overlay": Matthew.addTo(map)};
+
+L.control.layers(null, overlayMaps, {position: 'topleft', collapsed: false}).addTo(map);
+
+
+	
+	
+// mini map
+	// overlay detailed urban place names on locator map using Mapbox Studio
+  	var mapboxUrl='http://a.tiles.mapbox.com/v3/mapbox.world-light/{z}/{x}/{y}.png';
+	var mb = new L.TileLayer(mapboxUrl, {minZoom: 4, maxZoom: 16});
+	var miniMap = new L.Control.MiniMap(mb, { toggleDisplay: true, position: 'bottomleft' }).addTo(map);   
+
+	
+// Leaflet popup
+function popup(lat, lon){
+	var popup = L.popup()
+	.setLatLng([lat, lon])
+	.setContent('your selected article')
+	.openOn(map);
+	map.setView([lat, lon], 20);
+	} 	
+
+	
+	
+//cartodb.createLayer(map, layerUrl).addTo(map);		
+var sql = new cartodb.SQL({ user: 'gverutes' });
+		
+		
+
+
+// PROCESS FORM
+
+var sublayersBMU = [];
+var countBMU = 0;
+	
+function BMU(min, max){
+	
+	if (countBMU > 0) {
+	sublayersBMU[countBMU-1].hide();
+	}
+	
+	var MapQuery = "";
+	var CartoCSS = "";
+	
+
+	MapQuery = MapQuery + "SELECT * FROM bmu_join WHERE PY BETWEEN " + min + " AND " + max;
+	CartoCSS = CartoCSS + "#bmu_join{marker-width: 3; marker-opacity: 0.5; marker-line-width: 12; marker-fill: #FFF; marker-line-color: #ffff00; marker-clip: false; marker-allow-overlap: true;}";
+
+
+	  cartodb.createLayer(map, layerUrl)
+	  .addTo(map)
+	  .on('done', function(layer) {
+		// change the query for the first layer
+		var subLayerOptions = {
+		  sql: MapQuery,
+		  cartocss: CartoCSS,
+		}
+		var sublayer = layer.getSubLayer(0);
+		sublayer.set(subLayerOptions);
+		sublayersBMU.push(sublayer);
+		layer.setZIndex(10);
+		countBMU = countBMU + 1;
+	  }).on('error', function() {
+		// log the error
+	  });
+	
+}
+	
+
+var sublayersQuery= [];
+var countQuery = 0;	
+	
+	
+function processFormData(){
+
+	if (countQuery > 0) {
+	sublayersQuery[countQuery-1].hide();
+	}
+
+	// TWO MAPS
+	// 1) WHITE >> HOVER
+	// 2) RED >> CLICK TOOLTIP
+	
+	$("#tabs").tabs({ active: 1}); 
+	
+	/// START QUERY
+	var Query = "";
+	var tracker = 1;
+	
+
+	// FIX
+	var ck_Author = document.getElementById('ck_Author');
+	if (ck_Author.value != '' && tracker == 1){
+	  Query = Query + " WHERE au LIKE '%"+ck_Author.value+"%' ";
+	}
+		
+	// alert(QueryTotals_LEVEL); // CHECKING
+	
+	// TABLE SORT BY...
+	var sort_Year = document.getElementById('sort_Year');
+	var sort_Author = document.getElementById('sort_Author');
+	
+	if (sort_Year.checked){Query = Query + " ORDER BY py ASC";}  
+	else if (sort_Author.checked){Query = Query + " ORDER BY au ASC";}  
+	else {Query = Query + " ORDER ti ASC";}  
+
+	var QueryTable = "SELECT * FROM bmu_join" + Query;
+	//alert(QueryTable);
+	
+	
+	// BMU MAP
+	var sublayers = [];
+	cartodb.createLayer(map, layerUrl)
+	.addTo(map)
+	.on('done', function(layer) {
+	// change the query for the first layer
+	var subLayerOptions = {
+	  sql: QueryTable,
+	  cartocss: "#bmu_join{marker-width: 8; marker-line-width: 2; marker-line-color: #000; marker-fill: #de2d26; marker-clip: false; marker-allow-overlap: true;}"
+	}
+	var sublayer = layer.getSubLayer(0);
+	sublayer.set(subLayerOptions);
+	sublayersQuery.push(sublayer);
+	layer.setZIndex(100);
+	countQuery = countQuery + 1;
+
+	}).on('error', function() {
+	// log the error
+	});
+	
+
+	var sql = new cartodb.SQL({ user: 'gverutes' });
+	sql.execute(QueryTable)
+	  .done(function(data) {
+
+	  
+		// read table to variable "HTML"
+		var HTML = "";
+		if (data.total_rows == 0){HTML = HTML + "<br>&nbsp;&nbsp;No results found.";}
+		else {
+		HTML = HTML + "<table><tr><td align='center'><u><b>MAP</b></u></td><td align='center'><u><b>AUTHORS</b></u></td><td><u><b>TITLE</b></u></td><td align='center'><u><b>YEAR</b></u></td><td align='center'><u><b>TYPE</b></u></td><td align='center'><u><b>JOURNAL</b></u></td></tr>";
+		for (var i = 0; i < data.total_rows; i++) {
+		
+		// find author string and bold it
+		var index = data.rows[i].au.indexOf(ck_Author.value);
+		var AuthorStr = data.rows[i].au.substr(0, index) + '<b>'+ck_Author.value+'</b>' + data.rows[i].au.substr(index + ck_Author.value.length);	
+
+		HTML = HTML + "<tr><td align='center'><a href=\"javascript:popup("+data.rows[i].lat+", "+data.rows[i].lon+")\"> <span style='color:#de2d26'><font size='4'>&#9679;</font></span></a></td><td align='center'>"+AuthorStr+"</td><td>\""+data.rows[i].ti+"\"</td><td align='center'>"+data.rows[i].py+"</td><td align='center'>"+data.rows[i].dt+"</td><td align='center'><i>"+data.rows[i].so+"</i></td></tr><tr><td colspan='5' bgcolor='#f5f5f5'></td></tr>"};
+		
+		HTML = HTML + "</table>";
+		}	
+		// write table to left panel
+		document.getElementById("Table").innerHTML = HTML;	
+	});
+	
+
+
+}
+
+	
+ 
+    </script>
+  </body>
+</html>
